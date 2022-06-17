@@ -1,12 +1,21 @@
 import { GetServerSideProps } from "next";
+import { useEffect } from "react";
 import { Banner } from "../../components/Banner";
 import { ProductItem } from "../../components/ProductItem";
 import { SearchInput } from "../../components/SearchInput";
-import { getTenantResponse, useapi } from "../../libs/useApi";
+import { useAppContext } from "../../contexts/AppContext";
+import { useapi } from "../../libs/useApi";
 
 import styles from "../../styles/Home.module.css";
+import { Tenant } from "../../types/Tenant";
 
 const Home = (data: Props) => {
+  const { tenant, setTenant } = useAppContext();
+
+  useEffect(() => {
+    setTenant(data.tenant);
+  }, []);
+
   function handleSearch(searchValue: string) {
     alert("Voce está buscando por " + searchValue);
   }
@@ -24,24 +33,21 @@ const Home = (data: Props) => {
             <div className={styles.menuButton}>
               <div
                 className={styles.menuButtonLine}
-                style={{ background: data.tenant.mainColor }}
+                style={{ background: tenant?.mainColor }}
               />
               <div
                 className={styles.menuButtonLine}
-                style={{ background: data.tenant.mainColor }}
+                style={{ background: tenant?.mainColor }}
               />
               <div
                 className={styles.menuButtonLine}
-                style={{ background: data.tenant.mainColor }}
+                style={{ background: tenant?.mainColor }}
               />
             </div>
           </div>
         </div>
         <div className={styles.headerBottom}>
-          <SearchInput
-            mainColor={data.tenant.mainColor}
-            onSearch={handleSearch}
-          />
+          <SearchInput onSearch={handleSearch} />
         </div>
       </header>
       <Banner />
@@ -55,8 +61,6 @@ const Home = (data: Props) => {
             name: "Texas Burger",
             price: "25,50",
           }}
-          mainColor={data.tenant.mainColor}
-          secondColor={data.tenant.secondColor}
         />
         <ProductItem
           data={{
@@ -66,8 +70,6 @@ const Home = (data: Props) => {
             name: "Texas Burger",
             price: "25,50",
           }}
-          mainColor={data.tenant.mainColor}
-          secondColor={data.tenant.secondColor}
         />
         <ProductItem
           data={{
@@ -77,8 +79,6 @@ const Home = (data: Props) => {
             name: "Texas Burger",
             price: "25,50",
           }}
-          mainColor={data.tenant.mainColor}
-          secondColor={data.tenant.secondColor}
         />
         <ProductItem
           data={{
@@ -88,8 +88,6 @@ const Home = (data: Props) => {
             name: "Texas Burger",
             price: "25,50",
           }}
-          mainColor={data.tenant.mainColor}
-          secondColor={data.tenant.secondColor}
         />
         <ProductItem
           data={{
@@ -110,7 +108,7 @@ const Home = (data: Props) => {
 export default Home;
 
 type Props = {
-  tenant: getTenantResponse;
+  tenant: Tenant;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
